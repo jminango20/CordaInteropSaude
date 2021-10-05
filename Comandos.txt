@@ -1,0 +1,9 @@
+flow start FillMedicalRecords patientEMR: 2, patientName: Sandro, patientData: YYY, patientMother: Mae, patientIdentificator: CPF
+
+run vaultQuery contractStateType: net.corda.core.contracts.ContractState
+
+flow start RequestPatientRecords from: "APAE", patientName: A
+
+IJC
+CONSULTORIO
+APAE

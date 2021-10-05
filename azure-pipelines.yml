@@ -1,0 +1,30 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+  - develop
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: DEVELOP
+
+steps:
+  - task: DownloadSecureFile@1
+    name: sakey # The name with which to reference the secure file's path on the agent, like $(safile.secureFilePath)
+    inputs:
+      secureFile: 'sa-key.json'
+      #retryCount: 5 # Optional
+    displayName: 'Upload de arquivo de autenticação'
+
+  - script: |
+      cp $(sakey.secureFilePath) ./
+      find ./ -type f -iname "*.sh" -exec chmod +x {} \;
+    displayName: 'Ajustando permissões'
+
+  - script: |
+      ./utils/build.sh
+    displayName: 'Executando  build do cordapp'
