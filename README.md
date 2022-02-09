@@ -2,45 +2,51 @@
   <img src="https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png" alt="Corda" width="500">
 </p>
 
-#Java Medical Records CorDapp
+#BBChain: viabilidade da tecnologia DLT no ecossistema de saúde do estado de São Paulo Atividades Efetuadas
 
-Welcome to the Java Medical Records CorDapp. The CorDapp has 3 nodes, which represent hospitals CharitéHospital (Berlin), StMarysHospital (London) and Bolnitsa (Moscow). 
-Each hospital can save medical data on their vault and distribute to a particular hospital upon its request. 
-But contact rejects request to share medical records for hospitals that locate in certain countries
-This CorDapp utilises CordaServices to store vaultQueries.
+Plataforma segura para a gestão do ciclo de tratamento de doenças raras e a fim de reduzir o tempo de diagnóstico dessas doenças. 
 
-Troca de nome dos Hospitais: CharitéHospital (Berlin) - IJC, StMarysHospital (London) - Consultório, Bolnitsa (Moscow) - APAE
+A rede Corda proposta encontra-se conformada pelas seguientes participantes:
+
+ Instituto Jô Clemente (IJC),
+ Consultório Dra. Juliana,
+ APAE.
+
+Cada participante tem seu próprio nó hospedado em seu ambiente local. Esses nós serão integrados para a rede Corda o que permitirá a transferência de dados de
+saúde entre os nós. Dessa forma as informações relevantes podem ser compartilhadas entre os nós criando eficiências e evitando duplicação.
+
 
 ## Usage
 
 ### Pre-requisites:
 
-See https://docs.corda.net/getting-set-up.html.
+Ver https://docs.corda.net/getting-set-up.html.
 
 
-### Running the nodes:
+### Executando os nós:
 
-Open a terminal and go to the project root directory and type: (to deploy the nodes using bootstrapper)
+Abrir o terminal e ir à raiz do projeto e executar:
 ```
 ./gradlew clean deployNodes
 ```
-Then type: (to run the nodes)
+Depois executar: 
 ```
 ./build/nodes/runnodes
 ```
 
-We will interact with this CorDapp via the nodes' CRaSH shells.
+Para interaturar com os CorDapps via o nó ' CRaSH shells.
 
-First, go the shell of CharitéHospital, and create a medical record for a Patient X with dataRecord value of 10:
+Primeiramente, vamos para o shell CRaSH do nó IJC onde é gerado um registro médico para um paciente X ao executar o fluxo FillMedicalRecords.java da seguinte forma:
+  
+  flow start FillMedicalRecords patientEMR: 1, patientName: X, patientData: Examen de sangue, patientMother: Mae, patientIdentificator: 235.295.xxx-xx     
 
-    flow start FillMedicalRecords patientName: A, patientData: YYY       
-
-We can now look at the medical record in the CharitéHospital's vault:
+Podemos inspecionar o registro médico do paciente X no vault do nó IJC ao executar no shell o comando a seguir::
 
     run vaultQuery contractStateType: net.corda.core.contracts.ContractState
 
-If StMarysHospital wants to request medical records of the patient's A, he needs to request data from the shell of StMarysHospital by running:
+Se o nó Consultório deseja solicitar os registros médicos do paciente X, ele precisa solicitar os dados a partir do seu próprio shell. Assim, nos dirigimos para o
+shell do nó Consultório e executamos o fluxo RequestPatientRecords.java indicando o nome do paciente e do nó de qual queremos solicitar os registros médicos da seguinte forma:
 
-    flow start RequestPatientRecords from: "CharitéHospital", patientName: A
+    flow start RequestPatientRecords from: IJC, patientName: X
 
 
